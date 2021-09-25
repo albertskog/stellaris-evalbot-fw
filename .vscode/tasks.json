@@ -1,0 +1,30 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "make",
+            "type": "process",
+            "command": "make",
+            "args": [],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "flash",
+            "type": "process",
+            "command": "openocd",
+            "args": ["-f", "evalbot_flash.cfg"],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "dependsOn": ["make"]
+        }
+    ]
+}
