@@ -59,13 +59,13 @@ PushButtonsInit (void)
     //
     // Enable the GPIO port used by the pushbuttons.
     //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
 
     //
     // Set the button GPIOs as inputs.
     //
-    ROM_GPIOPinTypeGPIOInput(GPIO_PORTD_BASE, GPIO_PIN_6 | GPIO_PIN_7);
-    ROM_GPIOPadConfigSet(GPIO_PORTD_BASE, GPIO_PIN_6 | GPIO_PIN_7,
+    GPIOPinTypeGPIOInput(GPIO_PORTD_BASE, GPIO_PIN_6 | GPIO_PIN_7);
+    GPIOPadConfigSet(GPIO_PORTD_BASE, GPIO_PIN_6 | GPIO_PIN_7,
                          GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
 }
 
@@ -91,7 +91,7 @@ PushButtonDebouncer(void)
     //
     // Read the current state of the hardware push buttons
     //
-    ucData = ROM_GPIOPinRead(GPIO_PORTD_BASE, GPIO_PIN_6 | GPIO_PIN_7);
+    ucData = GPIOPinRead(GPIO_PORTD_BASE, GPIO_PIN_6 | GPIO_PIN_7);
 
     //
     // Determine buttons that are in a different state from the debounced state
@@ -152,7 +152,7 @@ tBoolean  PushButtonGetStatus (tButton eButton)
         //
         case BUTTON_1:
         {
-            status = ROM_GPIOPinRead(GPIO_PORTD_BASE, GPIO_PIN_6) ?
+            status = GPIOPinRead(GPIO_PORTD_BASE, GPIO_PIN_6) ?
                                      true : false;
             break;
         }
@@ -162,7 +162,7 @@ tBoolean  PushButtonGetStatus (tButton eButton)
         //
         case BUTTON_2:
         {
-            status = ROM_GPIOPinRead(GPIO_PORTD_BASE, GPIO_PIN_7) ?
+            status = GPIOPinRead(GPIO_PORTD_BASE, GPIO_PIN_7) ?
                                      true : false;
             break;
         }
@@ -254,12 +254,12 @@ LEDsInit (void)
     //
     // Enable the GPIO port used to control the LEDs.
     //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
 
     //
     // Set the LED GPIOs as output.
     //
-    ROM_GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_4 | GPIO_PIN_5);
+    GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_4 | GPIO_PIN_5);
 
     //
     // Turn off both LEDs
@@ -298,7 +298,7 @@ LED_On(tLED eLED)
         //
         case BOTH_LEDS:
         {
-            ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4 | GPIO_PIN_5,
+            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4 | GPIO_PIN_5,
                              GPIO_PIN_4 | GPIO_PIN_5);
             break;
         }
@@ -308,7 +308,7 @@ LED_On(tLED eLED)
         //
         case LED_1:
         {
-            ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4, GPIO_PIN_4);
+            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4, GPIO_PIN_4);
             break;
         }
 
@@ -317,7 +317,7 @@ LED_On(tLED eLED)
         //
         case LED_2:
         {
-            ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_5, GPIO_PIN_5);
+            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_5, GPIO_PIN_5);
             break;
         }
 
@@ -360,7 +360,7 @@ LED_Off (tLED eLED)
         //
         case BOTH_LEDS:
         {
-            ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4 | GPIO_PIN_5, 0);
+            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4 | GPIO_PIN_5, 0);
             break;
         }
 
@@ -369,7 +369,7 @@ LED_Off (tLED eLED)
         //
         case LED_1:
         {
-            ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4, 0);
+            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4, 0);
             break;
         }
 
@@ -378,7 +378,7 @@ LED_Off (tLED eLED)
         //
         case LED_2:
         {
-            ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_5, 0);
+            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_5, 0);
             break;
         }
 
@@ -422,8 +422,8 @@ LED_Toggle (tLED eLED)
         //
         case BOTH_LEDS:
         {
-            ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4 | GPIO_PIN_5,
-                      ~ROM_GPIOPinRead(GPIO_PORTF_BASE,
+            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4 | GPIO_PIN_5,
+                      ~GPIOPinRead(GPIO_PORTF_BASE,
                                        GPIO_PIN_4 | GPIO_PIN_5));
              break;
         }
@@ -433,8 +433,8 @@ LED_Toggle (tLED eLED)
         //
         case LED_1:
         {
-            ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4,
-                             ~ROM_GPIOPinRead(GPIO_PORTF_BASE, GPIO_PIN_4));
+            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_4,
+                             ~GPIOPinRead(GPIO_PORTF_BASE, GPIO_PIN_4));
             break;
         }
 
@@ -443,8 +443,8 @@ LED_Toggle (tLED eLED)
         //
         case LED_2:
         {
-            ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_5,
-                             ~ROM_GPIOPinRead(GPIO_PORTF_BASE, GPIO_PIN_5));
+            GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_5,
+                             ~GPIOPinRead(GPIO_PORTF_BASE, GPIO_PIN_5));
             break;
         }
 

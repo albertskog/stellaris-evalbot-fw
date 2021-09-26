@@ -94,13 +94,13 @@ BumpSensorsInit (void)
     //
     // Enable the GPIO ports used for the bump sensors.
     //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
 
     //
     // Configure the sensor GPIOs as pulled-up inputs.
     //
-    ROM_GPIOPinTypeGPIOInput(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-    ROM_GPIOPadConfigSet(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1,
+    GPIOPinTypeGPIOInput(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+    GPIOPadConfigSet(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1,
                          GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
 }
 
@@ -131,7 +131,7 @@ tBoolean BumpSensorGetStatus (tBumper eBumper)
         //
         case BUMP_RIGHT:
         {
-            status = ROM_GPIOPinRead(GPIO_PORTE_BASE, GPIO_PIN_0) ?
+            status = GPIOPinRead(GPIO_PORTE_BASE, GPIO_PIN_0) ?
                                      true : false;
             break;
         }
@@ -141,7 +141,7 @@ tBoolean BumpSensorGetStatus (tBumper eBumper)
         //
         case BUMP_LEFT:
         {
-            status = ROM_GPIOPinRead(GPIO_PORTE_BASE, GPIO_PIN_1) ?
+            status = GPIOPinRead(GPIO_PORTE_BASE, GPIO_PIN_1) ?
                                      true : false;
             break;
         }
@@ -184,7 +184,7 @@ BumpSensorDebouncer(void)
     //
     // Read the current state of the hardware bump sensors
     //
-    ucData = ROM_GPIOPinRead(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+    ucData = GPIOPinRead(GPIO_PORTE_BASE, GPIO_PIN_0 | GPIO_PIN_1);
 
     //
     // Determine bumpers that are in a different state from the debounced state
@@ -294,43 +294,43 @@ WheelSensorsInit(void (*pfnCallback)(tWheel eWheel))
     //
     // Enable the GPIO ports used for the wheel encoders.
     //
-    ROM_SysCtlPeripheralEnable(LEFT_RIGHT_IR_LED_PERIPH);
-    ROM_SysCtlPeripheralEnable(LEFT_IR_SENSOR_PERIPH);
-    ROM_SysCtlPeripheralEnable(RIGHT_IR_SENSOR_PERIPH);
+    SysCtlPeripheralEnable(LEFT_RIGHT_IR_LED_PERIPH);
+    SysCtlPeripheralEnable(LEFT_IR_SENSOR_PERIPH);
+    SysCtlPeripheralEnable(RIGHT_IR_SENSOR_PERIPH);
 
     //
     // Configure the sensor inputs.
     //
-    ROM_GPIOPinTypeGPIOInput(LEFT_IR_SENSOR_PORT, LEFT_IR_SENSOR_PIN);
-    ROM_GPIOPinTypeGPIOInput(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN);
+    GPIOPinTypeGPIOInput(LEFT_IR_SENSOR_PORT, LEFT_IR_SENSOR_PIN);
+    GPIOPinTypeGPIOInput(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN);
 
     //
     // Configure the LED outputs.  Initially turn the LEDs off by setting the
     // pins high.
     //
-    ROM_GPIOPinTypeGPIOOutput(LEFT_RIGHT_IR_LED_PORT, LEFT_RIGHT_IR_LED_PIN);
-    ROM_GPIOPadConfigSet(LEFT_RIGHT_IR_LED_PORT, LEFT_RIGHT_IR_LED_PIN,
+    GPIOPinTypeGPIOOutput(LEFT_RIGHT_IR_LED_PORT, LEFT_RIGHT_IR_LED_PIN);
+    GPIOPadConfigSet(LEFT_RIGHT_IR_LED_PORT, LEFT_RIGHT_IR_LED_PIN,
                          GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_STD);
-    ROM_GPIOPinWrite(LEFT_RIGHT_IR_LED_PORT, LEFT_RIGHT_IR_LED_PIN,
+    GPIOPinWrite(LEFT_RIGHT_IR_LED_PORT, LEFT_RIGHT_IR_LED_PIN,
                      LEFT_RIGHT_IR_LED_PIN);
 
     //
     // Disable all of the pin interrupts
     //
-    ROM_GPIOPinIntDisable(LEFT_IR_SENSOR_PORT, LEFT_IR_SENSOR_PIN);
-    ROM_GPIOPinIntDisable(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN);
+    GPIOPinIntDisable(LEFT_IR_SENSOR_PORT, LEFT_IR_SENSOR_PIN);
+    GPIOPinIntDisable(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN);
 
-    ROM_GPIOIntTypeSet(LEFT_IR_SENSOR_PORT, LEFT_IR_SENSOR_PIN,
+    GPIOIntTypeSet(LEFT_IR_SENSOR_PORT, LEFT_IR_SENSOR_PIN,
                        GPIO_RISING_EDGE);
-    ROM_GPIOIntTypeSet(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN,
+    GPIOIntTypeSet(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN,
                        GPIO_RISING_EDGE);
 
     //
     // Enable the GPIO port interrupts for the inputs.  The interrupts for the
     // individual pins still need to be enabled by WheelSensorIntEnable().
     //
-    ROM_IntEnable(LEFT_IR_SENSOR_INT);
-    ROM_IntEnable(RIGHT_IR_SENSOR_INT);
+    IntEnable(LEFT_IR_SENSOR_INT);
+    IntEnable(RIGHT_IR_SENSOR_INT);
 }
 
 //*****************************************************************************
@@ -353,7 +353,7 @@ WheelSensorEnable(void)
     //
     // Turn on the LEDs by setting the pin high.
     //
-    ROM_GPIOPinWrite(LEFT_RIGHT_IR_LED_PORT, LEFT_RIGHT_IR_LED_PIN,
+    GPIOPinWrite(LEFT_RIGHT_IR_LED_PORT, LEFT_RIGHT_IR_LED_PIN,
                      LEFT_RIGHT_IR_LED_PIN);
 }
 
@@ -375,7 +375,7 @@ WheelSensorDisable(void)
     //
     // Turn off the LEDs by setting the pin low.
     //
-    ROM_GPIOPinWrite(LEFT_RIGHT_IR_LED_PORT, LEFT_RIGHT_IR_LED_PIN, 0);
+    GPIOPinWrite(LEFT_RIGHT_IR_LED_PORT, LEFT_RIGHT_IR_LED_PIN, 0);
 }
 
 //*****************************************************************************
@@ -406,13 +406,13 @@ WheelSensorIntEnable(tWheel eWheel)
     //
     if(eWheel == WHEEL_LEFT)
     {
-        ROM_GPIOPinIntClear(LEFT_IR_SENSOR_PORT, LEFT_IR_SENSOR_PIN);
-        ROM_GPIOPinIntEnable(LEFT_IR_SENSOR_PORT, LEFT_IR_SENSOR_PIN);
+        GPIOPinIntClear(LEFT_IR_SENSOR_PORT, LEFT_IR_SENSOR_PIN);
+        GPIOPinIntEnable(LEFT_IR_SENSOR_PORT, LEFT_IR_SENSOR_PIN);
     }
     else
     {
-        ROM_GPIOPinIntClear(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN);
-        ROM_GPIOPinIntEnable(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN);
+        GPIOPinIntClear(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN);
+        GPIOPinIntEnable(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN);
     }
 }
 
@@ -444,11 +444,11 @@ WheelSensorIntDisable(tWheel eWheel)
     //
     if(eWheel == WHEEL_LEFT)
     {
-        ROM_GPIOPinIntDisable(LEFT_IR_SENSOR_PORT, LEFT_IR_SENSOR_PIN);
+        GPIOPinIntDisable(LEFT_IR_SENSOR_PORT, LEFT_IR_SENSOR_PIN);
     }
     else
     {
-        ROM_GPIOPinIntDisable(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN);
+        GPIOPinIntDisable(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN);
     }
 }
 
@@ -480,13 +480,13 @@ WheelSensorIntHandler(void)
     //
     // Was this interrupt from the left wheel sensor?
     //
-    ulStatus = ROM_GPIOPinIntStatus(LEFT_IR_SENSOR_PORT, true);
+    ulStatus = GPIOPinIntStatus(LEFT_IR_SENSOR_PORT, true);
     if (ulStatus & LEFT_IR_SENSOR_PIN)
     {
         //
         // Clear the interrupt.
         //
-        ROM_GPIOPinIntClear(LEFT_IR_SENSOR_PORT,
+        GPIOPinIntClear(LEFT_IR_SENSOR_PORT,
                             LEFT_IR_SENSOR_PIN);
 
         //
@@ -496,7 +496,7 @@ WheelSensorIntHandler(void)
         //
         for (ulLoop = 0; ulLoop < 100; ulLoop++)
         {
-            if (!ROM_GPIOPinRead(LEFT_IR_SENSOR_PORT, LEFT_IR_SENSOR_PIN))
+            if (!GPIOPinRead(LEFT_IR_SENSOR_PORT, LEFT_IR_SENSOR_PIN))
             {
                 return;
             }
@@ -514,13 +514,13 @@ WheelSensorIntHandler(void)
     //
     // Was this from the right side sensor?
     //
-    ulStatus = ROM_GPIOPinIntStatus(RIGHT_IR_SENSOR_PORT, true);
+    ulStatus = GPIOPinIntStatus(RIGHT_IR_SENSOR_PORT, true);
     if (ulStatus & RIGHT_IR_SENSOR_PIN)
     {
         //
         // Clear the interrupt.
         //
-        ROM_GPIOPinIntClear(RIGHT_IR_SENSOR_PORT,
+        GPIOPinIntClear(RIGHT_IR_SENSOR_PORT,
                             RIGHT_IR_SENSOR_PIN);
 
         //
@@ -530,7 +530,7 @@ WheelSensorIntHandler(void)
         //
         for (ulLoop = 0; ulLoop < 100; ulLoop++)
         {
-            if (!ROM_GPIOPinRead(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN))
+            if (!GPIOPinRead(RIGHT_IR_SENSOR_PORT, RIGHT_IR_SENSOR_PIN))
             {
                 return;
             }

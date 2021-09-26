@@ -266,17 +266,17 @@ Display96x16x1WriteFirst(unsigned char ucChar)
     //
     // Set the slave address.
     //
-    ROM_I2CMasterSlaveAddrSet(I2C1_MASTER_BASE, SSD_ADDR, false);
+    I2CMasterSlaveAddrSet(I2C1_MASTER_BASE, SSD_ADDR, false);
 
     //
     // Write the first byte to the controller.
     //
-    ROM_I2CMasterDataPut(I2C1_MASTER_BASE, ucChar);
+    I2CMasterDataPut(I2C1_MASTER_BASE, ucChar);
 
     //
     // Start the transfer.
     //
-    ROM_I2CMasterControl(I2C1_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_START);
+    I2CMasterControl(I2C1_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_START);
 }
 
 //*****************************************************************************
@@ -303,24 +303,24 @@ Display96x16x1WriteByte(unsigned char ucChar)
     //
     // Wait until the current byte has been transferred.
     //
-    while(ROM_I2CMasterIntStatus(I2C1_MASTER_BASE, false) == 0)
+    while(I2CMasterIntStatus(I2C1_MASTER_BASE, false) == 0)
     {
     }
 
     //
     // Clear the I2C interrupt.
     //
-    ROM_I2CMasterIntClear(I2C1_MASTER_BASE);
+    I2CMasterIntClear(I2C1_MASTER_BASE);
 
     //
     // Write the next byte to the controller.
     //
-    ROM_I2CMasterDataPut(I2C1_MASTER_BASE, ucChar);
+    I2CMasterDataPut(I2C1_MASTER_BASE, ucChar);
 
     //
     // Continue the transfer.
     //
-    ROM_I2CMasterControl(I2C1_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
+    I2CMasterControl(I2C1_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
 }
 
 //*****************************************************************************
@@ -350,25 +350,25 @@ Display96x16x1WriteArray(const unsigned char *pucBuffer, unsigned long ulCount)
         //
         // Wait until the current byte has been transferred.
         //
-        while(ROM_I2CMasterIntStatus(I2C1_MASTER_BASE, false) == 0)
+        while(I2CMasterIntStatus(I2C1_MASTER_BASE, false) == 0)
         {
         }
 
         //
         // Clear the I2C interrupt.
         //
-        ROM_I2CMasterIntClear(I2C1_MASTER_BASE);
+        I2CMasterIntClear(I2C1_MASTER_BASE);
 
         //
         // Write the next byte to the controller.
         //
-        ROM_I2CMasterDataPut(I2C1_MASTER_BASE, *pucBuffer++);
+        I2CMasterDataPut(I2C1_MASTER_BASE, *pucBuffer++);
         ulCount--;
 
         //
         // Continue the transfer.
         //
-        ROM_I2CMasterControl(I2C1_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
+        I2CMasterControl(I2C1_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
     }
 }
 
@@ -395,36 +395,36 @@ Display96x16x1WriteFinal(unsigned char ucChar)
     //
     // Wait until the current byte has been transferred.
     //
-    while(ROM_I2CMasterIntStatus(I2C1_MASTER_BASE, false) == 0)
+    while(I2CMasterIntStatus(I2C1_MASTER_BASE, false) == 0)
     {
     }
 
     //
     // Clear the I2C interrupt.
     //
-    ROM_I2CMasterIntClear(I2C1_MASTER_BASE);
+    I2CMasterIntClear(I2C1_MASTER_BASE);
 
     //
     // Write the final byte to the controller.
     //
-    ROM_I2CMasterDataPut(I2C1_MASTER_BASE, ucChar);
+    I2CMasterDataPut(I2C1_MASTER_BASE, ucChar);
 
     //
     // Finish the transfer.
     //
-    ROM_I2CMasterControl(I2C1_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_FINISH);
+    I2CMasterControl(I2C1_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_FINISH);
 
     //
     // Wait until the final byte has been transferred.
     //
-    while(ROM_I2CMasterIntStatus(I2C1_MASTER_BASE, false) == 0)
+    while(I2CMasterIntStatus(I2C1_MASTER_BASE, false) == 0)
     {
     }
 
     //
     // Clear the I2C interrupt.
     //
-    ROM_I2CMasterIntClear(I2C1_MASTER_BASE);
+    I2CMasterIntClear(I2C1_MASTER_BASE);
 }
 
 //*****************************************************************************
@@ -841,52 +841,52 @@ Display96x16x1Init(tBoolean bFast)
     // But if the motor driver is not used, then the motor power supply needs
     // to be turned on here so the OLED works properly.
     //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
-    ROM_GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE, GPIO_PIN_5);
-    ROM_GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_5, GPIO_PIN_5);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
+    GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE, GPIO_PIN_5);
+    GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_5, GPIO_PIN_5);
 
     //
     // Enable the I2C and GPIO peripherals needed for the display.
     //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C1);
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOG);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C1);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOG);
 
     //
     // Deassert the display controller reset signal (active low)
     //
-    ROM_GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_0);
-    ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, GPIO_PIN_0);
+    GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_0);
+    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, GPIO_PIN_0);
 
     //
     // Wait a short delay, then drive the pin low to reset the controller
     //
     SysCtlDelay(32);
-    ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, 0);
+    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, 0);
 
     //
     // Leave it is reset for a short delay, then drive it high to deassert
     // reset.  Then the controller should be out of reset.
     //
     SysCtlDelay(32);
-    ROM_GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, GPIO_PIN_0);
+    GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, GPIO_PIN_0);
 
     //
     // Configure the GPIO pins needed for the display as I2C
     //
     GPIOPinConfigure(GPIO_PG0_I2C1SCL);
     GPIOPinConfigure(GPIO_PG1_I2C1SDA);
-    ROM_GPIOPinTypeI2C(GPIO_PORTG_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+    GPIOPinTypeI2C(GPIO_PORTG_BASE, GPIO_PIN_0 | GPIO_PIN_1);
 
     //
     // Reset the I2C1 peripheral.
     //
-    ROM_SysCtlPeripheralReset(SYSCTL_PERIPH_I2C1);
+    SysCtlPeripheralReset(SYSCTL_PERIPH_I2C1);
 
     //
     // Initialize the I2C master.
     //
-    ROM_I2CMasterInitExpClk(I2C1_MASTER_BASE, ROM_SysCtlClockGet(), bFast);
+    I2CMasterInitExpClk(I2C1_MASTER_BASE, SysCtlClockGet(), bFast);
 
     //
     // Initialize the display controller.  Loop through the initialization

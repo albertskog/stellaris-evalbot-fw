@@ -489,7 +489,7 @@ WavePlayContinue(tWaveHeader *pWaveHeader)
     //
     // Must disable I2S interrupts during this time to prevent state problems.
     //
-    ROM_IntDisable(INT_I2S0);
+    IntDisable(INT_I2S0);
 
     //
     // If the refill flag gets cleared then fill the requested side of the
@@ -560,7 +560,7 @@ WavePlayContinue(tWaveHeader *pWaveHeader)
     // Reenable the I2S interrupt now that we're finished mucking with
     // state and flags.
     //
-    ROM_IntEnable(INT_I2S0);
+    IntEnable(INT_I2S0);
 
     return(bRetcode);
 }

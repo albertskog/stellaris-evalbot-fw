@@ -83,65 +83,65 @@ DACWriteRegister(unsigned char ucRegister, unsigned long ulData)
     //
     // Set the slave address.
     //
-    ROM_I2CMasterSlaveAddrSet(DAC_I2C_MASTER_BASE, TI_TLV320AIC3107_ADDR,
+    I2CMasterSlaveAddrSet(DAC_I2C_MASTER_BASE, TI_TLV320AIC3107_ADDR,
                               false);
 
     //
     // Write the first byte to the controller (register)
     //
-    ROM_I2CMasterDataPut(DAC_I2C_MASTER_BASE, ucRegister);
+    I2CMasterDataPut(DAC_I2C_MASTER_BASE, ucRegister);
 
     //
     // Continue the transfer.
     //
-    ROM_I2CMasterControl(DAC_I2C_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_START);
+    I2CMasterControl(DAC_I2C_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_START);
 
     //
     // Wait until the current byte has been transferred.
     //
-    while(ROM_I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false) == 0)
+    while(I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false) == 0)
     {
     }
 
-    if(ROM_I2CMasterErr(DAC_I2C_MASTER_BASE) != I2C_MASTER_ERR_NONE)
+    if(I2CMasterErr(DAC_I2C_MASTER_BASE) != I2C_MASTER_ERR_NONE)
     {
-        ROM_I2CMasterIntClear(DAC_I2C_MASTER_BASE);
+        I2CMasterIntClear(DAC_I2C_MASTER_BASE);
         return(false);
     }
 
     //
     // Wait until the current byte has been transferred.
     //
-    while(ROM_I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false))
+    while(I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false))
     {
-        ROM_I2CMasterIntClear(DAC_I2C_MASTER_BASE);
+        I2CMasterIntClear(DAC_I2C_MASTER_BASE);
     }
 
     //
     // Write the data byte to the controller.
     //
-    ROM_I2CMasterDataPut(DAC_I2C_MASTER_BASE, ulData);
+    I2CMasterDataPut(DAC_I2C_MASTER_BASE, ulData);
 
     //
     // End the transfer.
     //
-    ROM_I2CMasterControl(DAC_I2C_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_FINISH);
+    I2CMasterControl(DAC_I2C_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_FINISH);
 
     //
     // Wait until the current byte has been transferred.
     //
-    while(ROM_I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false) == 0)
+    while(I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false) == 0)
     {
     }
 
-    if(ROM_I2CMasterErr(DAC_I2C_MASTER_BASE) != I2C_MASTER_ERR_NONE)
+    if(I2CMasterErr(DAC_I2C_MASTER_BASE) != I2C_MASTER_ERR_NONE)
     {
         return(false);
     }
 
-    while(ROM_I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false))
+    while(I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false))
     {
-        ROM_I2CMasterIntClear(DAC_I2C_MASTER_BASE);
+        I2CMasterIntClear(DAC_I2C_MASTER_BASE);
     }
 
     return(true);
@@ -163,75 +163,75 @@ DACReadRegister(unsigned char ucRegister, unsigned char *pucData)
     //
     // Set the slave address and "WRITE"
     //
-    ROM_I2CMasterSlaveAddrSet(DAC_I2C_MASTER_BASE, TI_TLV320AIC3107_ADDR,
+    I2CMasterSlaveAddrSet(DAC_I2C_MASTER_BASE, TI_TLV320AIC3107_ADDR,
                               false);
 
     //
     // Write the first byte to the controller (register)
     //
-    ROM_I2CMasterDataPut(DAC_I2C_MASTER_BASE, ucRegister);
+    I2CMasterDataPut(DAC_I2C_MASTER_BASE, ucRegister);
 
     //
     // Continue the transfer.
     //
-    ROM_I2CMasterControl(DAC_I2C_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_START);
+    I2CMasterControl(DAC_I2C_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_START);
 
     //
     // Wait until the current byte has been transferred.
     //
-    while(ROM_I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false) == 0)
+    while(I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false) == 0)
     {
     }
 
-    if(ROM_I2CMasterErr(DAC_I2C_MASTER_BASE) != I2C_MASTER_ERR_NONE)
+    if(I2CMasterErr(DAC_I2C_MASTER_BASE) != I2C_MASTER_ERR_NONE)
     {
-        ROM_I2CMasterIntClear(DAC_I2C_MASTER_BASE);
+        I2CMasterIntClear(DAC_I2C_MASTER_BASE);
         return(false);
     }
 
     //
     // Wait until the current byte has been transferred.
     //
-    while(ROM_I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false))
+    while(I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false))
     {
-        ROM_I2CMasterIntClear(DAC_I2C_MASTER_BASE);
+        I2CMasterIntClear(DAC_I2C_MASTER_BASE);
     }
 
     //
     // Set the slave address and "READ"/true.
     //
-    ROM_I2CMasterSlaveAddrSet(DAC_I2C_MASTER_BASE, TI_TLV320AIC3107_ADDR, true);
+    I2CMasterSlaveAddrSet(DAC_I2C_MASTER_BASE, TI_TLV320AIC3107_ADDR, true);
 
     //
     // Read Data Byte.
     //
-    ROM_I2CMasterControl(DAC_I2C_MASTER_BASE, I2C_MASTER_CMD_SINGLE_RECEIVE);
+    I2CMasterControl(DAC_I2C_MASTER_BASE, I2C_MASTER_CMD_SINGLE_RECEIVE);
 
     //
     // Wait until the current byte has been transferred.
     //
-    while(ROM_I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false) == 0)
+    while(I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false) == 0)
     {
     }
 
-    if(ROM_I2CMasterErr(DAC_I2C_MASTER_BASE) != I2C_MASTER_ERR_NONE)
+    if(I2CMasterErr(DAC_I2C_MASTER_BASE) != I2C_MASTER_ERR_NONE)
     {
-        ROM_I2CMasterIntClear(DAC_I2C_MASTER_BASE);
+        I2CMasterIntClear(DAC_I2C_MASTER_BASE);
         return(false);
     }
 
     //
     // Wait until the current byte has been transferred.
     //
-    while(ROM_I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false))
+    while(I2CMasterIntStatus(DAC_I2C_MASTER_BASE, false))
     {
-        ROM_I2CMasterIntClear(DAC_I2C_MASTER_BASE);
+        I2CMasterIntClear(DAC_I2C_MASTER_BASE);
     }
 
     //
     // Read the value received.
     //
-    *pucData  = ROM_I2CMasterDataGet(DAC_I2C_MASTER_BASE);
+    *pucData  = I2CMasterDataGet(DAC_I2C_MASTER_BASE);
 
     return(true);
 }
@@ -258,22 +258,22 @@ DACInit(void)
     // is present, the pull-up on the board should easily overwhelm
     // the pull-down and we should read the line state as high.
     //
-    ROM_SysCtlPeripheralEnable(DAC_I2CSCL_GPIO_PERIPH);
-    ROM_GPIOPinTypeGPIOInput(DAC_I2CSCL_GPIO_PORT, DAC_I2CSDA_PIN);
-    ROM_GPIOPadConfigSet(DAC_I2CSCL_GPIO_PORT, DAC_I2CSDA_PIN,
+    SysCtlPeripheralEnable(DAC_I2CSCL_GPIO_PERIPH);
+    GPIOPinTypeGPIOInput(DAC_I2CSCL_GPIO_PORT, DAC_I2CSDA_PIN);
+    GPIOPadConfigSet(DAC_I2CSCL_GPIO_PORT, DAC_I2CSDA_PIN,
                          GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPD);
 
     //
     // Enable the I2C peripheral.
     //
-    ROM_SysCtlPeripheralEnable(DAC_I2C_PERIPH);
+    SysCtlPeripheralEnable(DAC_I2C_PERIPH);
 
     //
     // Delay a while to ensure that we read a stable value from the SDA
     // GPIO pin.  If we read too quickly, the result is unpredictable.
     // This delay is around 2mS.
     //
-    SysCtlDelay(ROM_SysCtlClockGet() / (3 * 500));
+    SysCtlDelay(SysCtlClockGet() / (3 * 500));
 
     //
     // Configure the pin mux.
@@ -284,28 +284,28 @@ DACInit(void)
     //
     // Configure the I2C SCL and SDA pins for I2C operation.
     //
-    ROM_GPIOPinTypeI2C(DAC_I2CSCL_GPIO_PORT, DAC_I2CSCL_PIN | DAC_I2CSDA_PIN);
+    GPIOPinTypeI2C(DAC_I2CSCL_GPIO_PORT, DAC_I2CSCL_PIN | DAC_I2CSDA_PIN);
 
     //
     // Initialize the I2C master.
     //
-    ROM_I2CMasterInitExpClk(DAC_I2C_MASTER_BASE, SysCtlClockGet(), 0);
+    I2CMasterInitExpClk(DAC_I2C_MASTER_BASE, SysCtlClockGet(), 0);
 
     //
     // Enable the I2C peripheral.
     //
-    ROM_SysCtlPeripheralEnable(DAC_RESET_GPIO_PERIPH);
+    SysCtlPeripheralEnable(DAC_RESET_GPIO_PERIPH);
 
     //
     // Configure the PH2 as a GPIO output.
     //
-    ROM_GPIOPinTypeGPIOOutput(DAC_RESET_GPIO_PORT, DAC_RESET_PIN);
+    GPIOPinTypeGPIOOutput(DAC_RESET_GPIO_PORT, DAC_RESET_PIN);
 
     //
     // Reset the DAC
     //
-    ROM_GPIOPinWrite(DAC_RESET_GPIO_PORT , DAC_RESET_PIN, 0);
-    ROM_GPIOPinWrite(DAC_RESET_GPIO_PORT , DAC_RESET_PIN, DAC_RESET_PIN);
+    GPIOPinWrite(DAC_RESET_GPIO_PORT , DAC_RESET_PIN, 0);
+    GPIOPinWrite(DAC_RESET_GPIO_PORT , DAC_RESET_PIN, DAC_RESET_PIN);
 
     //
     // Reset the DAC.  Check the return code on this call since we use it to

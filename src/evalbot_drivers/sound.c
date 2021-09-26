@@ -158,11 +158,11 @@ SoundInit(void)
     //
     // Enable and reset the peripheral.
     //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_I2S0);
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UDMA);
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2S0);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_UDMA);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
 
     //
     // Set up the pin mux.
@@ -175,23 +175,23 @@ SoundInit(void)
     //
     // Select alternate functions for all of the I2S pins.
     //
-    ROM_SysCtlPeripheralEnable(I2S0_SCLKTX_PERIPH);
+    SysCtlPeripheralEnable(I2S0_SCLKTX_PERIPH);
     GPIOPinTypeI2S(I2S0_SCLKTX_PORT, I2S0_SCLKTX_PIN);
 
-    ROM_SysCtlPeripheralEnable(I2S0_MCLKTX_PERIPH);
+    SysCtlPeripheralEnable(I2S0_MCLKTX_PERIPH);
     GPIOPinTypeI2S(I2S0_MCLKTX_PORT, I2S0_MCLKTX_PIN);
 
-    ROM_SysCtlPeripheralEnable(I2S0_LRCTX_PERIPH);
+    SysCtlPeripheralEnable(I2S0_LRCTX_PERIPH);
     GPIOPinTypeI2S(I2S0_LRCTX_PORT, I2S0_LRCTX_PIN);
 
-    ROM_SysCtlPeripheralEnable(I2S0_SDATX_PERIPH);
+    SysCtlPeripheralEnable(I2S0_SDATX_PERIPH);
     GPIOPinTypeI2S(I2S0_SDATX_PORT, I2S0_SDATX_PIN);
 
     //
     // Set up the DMA.
     //
-    ROM_uDMAControlBaseSet(&sDMAControlTable[0]);
-    ROM_uDMAEnable();
+    uDMAControlBaseSet(&sDMAControlTable[0]);
+    uDMAEnable();
 
     //
     // Initialize the DAC.
@@ -211,7 +211,7 @@ SoundInit(void)
     //
     // Disable all uDMA attributes.
     //
-    ROM_uDMAChannelAttributeDisable(UDMA_CHANNEL_I2S0TX, UDMA_ATTR_ALL);
+    uDMAChannelAttributeDisable(UDMA_CHANNEL_I2S0TX, UDMA_ATTR_ALL);
 
     //
     // Enable the I2S Tx controller.
@@ -263,7 +263,7 @@ SoundIntHandler(void)
         //
         // If the TX DMA is done, then call the callback if present.
         //
-        if(ROM_uDMAChannelModeGet(UDMA_CHANNEL_I2S0TX | UDMA_PRI_SELECT) ==
+        if(uDMAChannelModeGet(UDMA_CHANNEL_I2S0TX | UDMA_PRI_SELECT) ==
            UDMA_MODE_STOP)
         {
             //
@@ -286,7 +286,7 @@ SoundIntHandler(void)
         //
         // If the TX DMA is done, then call the callback if present.
         //
-        if(ROM_uDMAChannelModeGet(UDMA_CHANNEL_I2S0TX | UDMA_ALT_SELECT) ==
+        if(uDMAChannelModeGet(UDMA_CHANNEL_I2S0TX | UDMA_ALT_SELECT) ==
            UDMA_MODE_STOP)
         {
             //
@@ -517,7 +517,7 @@ SoundSetFormat(unsigned long ulSampleRate, unsigned short usBitsPerSample,
     //
     // Configure the I2S TX DMA channel to use high priority burst transfer.
     //
-    ROM_uDMAChannelAttributeEnable(UDMA_CHANNEL_I2S0TX,
+    uDMAChannelAttributeEnable(UDMA_CHANNEL_I2S0TX,
                                    (UDMA_ATTR_USEBURST |
                                     UDMA_ATTR_HIGH_PRIORITY));
 
@@ -574,9 +574,9 @@ SoundSetFormat(unsigned long ulSampleRate, unsigned short usBitsPerSample,
     //
     // Configure the DMA settings for this channel.
     //
-    ROM_uDMAChannelControlSet(UDMA_CHANNEL_I2S0TX | UDMA_PRI_SELECT,
+    uDMAChannelControlSet(UDMA_CHANNEL_I2S0TX | UDMA_PRI_SELECT,
                               ulDMASetting);
-    ROM_uDMAChannelControlSet(UDMA_CHANNEL_I2S0TX | UDMA_ALT_SELECT,
+    uDMAChannelControlSet(UDMA_CHANNEL_I2S0TX | UDMA_ALT_SELECT,
                               ulDMASetting);
 }
 
@@ -623,7 +623,7 @@ SoundBufferPlay(const void *pvData, unsigned long ulLength,
     //
     // Must disable I2S interrupts during this time to prevent state problems.
     //
-    ROM_IntDisable(INT_I2S0);
+    IntDisable(INT_I2S0);
 
     //
     // Save the buffer information.
@@ -689,7 +689,7 @@ SoundBufferPlay(const void *pvData, unsigned long ulLength,
     //
     // Set up the uDMA transfer addresses, using ping-pong mode.
     //
-    ROM_uDMAChannelTransferSet(ulChannel,
+    uDMAChannelTransferSet(ulChannel,
                            UDMA_MODE_PINGPONG,
                            (unsigned long *)g_sOutBuffers[g_ulPlaying].pulData,
                            (void *)(I2S0_BASE + I2S_O_TXFIFO),
@@ -700,7 +700,7 @@ SoundBufferPlay(const void *pvData, unsigned long ulLength,
     // start servicing the request from the I2S, and the transmit side
     // should start running.
     //
-    ROM_uDMAChannelEnable(UDMA_CHANNEL_I2S0TX);
+    uDMAChannelEnable(UDMA_CHANNEL_I2S0TX);
 
     //
     // Indicate that there is still a pending transfer.
@@ -720,7 +720,7 @@ SoundBufferPlay(const void *pvData, unsigned long ulLength,
     //
     // Re-enable I2S interrupts.
     //
-    ROM_IntEnable(INT_I2S0);
+    IntEnable(INT_I2S0);
 }
 
 //*****************************************************************************

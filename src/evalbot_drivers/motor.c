@@ -43,7 +43,7 @@
 // Defines the PWM period in ticks.
 //
 //*****************************************************************************
-#define PWM_PERIOD (ROM_SysCtlClockGet() / 16000)
+#define PWM_PERIOD (SysCtlClockGet() / 16000)
 
 //*****************************************************************************
 //
@@ -62,14 +62,14 @@ MotorsInit (void)
     //
     // Enable the PWM controller and set its clock rate.
     //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM);
-    ROM_SysCtlPWMClockSet(SYSCTL_PWMDIV_1);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM);
+    SysCtlPWMClockSet(SYSCTL_PWMDIV_1);
 
     //
     // Enable the GPIO ports used by the motor.
     //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOH);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOH);
 
     //
     // Set up the pin muxing for the PWM pins
@@ -80,63 +80,63 @@ MotorsInit (void)
     //
     // Configure the PWM0 generator
     //
-    ROM_PWMGenConfigure(PWM_BASE, PWM_GEN_0,
+    PWMGenConfigure(PWM_BASE, PWM_GEN_0,
                         PWM_GEN_MODE_UP_DOWN | PWM_GEN_MODE_NO_SYNC);
-    ROM_PWMGenPeriodSet(PWM_BASE, PWM_GEN_0, PWM_PERIOD);
+    PWMGenPeriodSet(PWM_BASE, PWM_GEN_0, PWM_PERIOD);
 
     //
     // Configure the PWM1 generator
     //
-    ROM_PWMGenConfigure(PWM_BASE, PWM_GEN_1,
+    PWMGenConfigure(PWM_BASE, PWM_GEN_1,
                         PWM_GEN_MODE_UP_DOWN | PWM_GEN_MODE_NO_SYNC);
-    ROM_PWMGenPeriodSet(PWM_BASE, PWM_GEN_1, PWM_PERIOD);
+    PWMGenPeriodSet(PWM_BASE, PWM_GEN_1, PWM_PERIOD);
 
 
     //
     // Configure the pulse widths for each PWM signal to initially 0%
     //
-    ROM_PWMPulseWidthSet(PWM_BASE, PWM_OUT_0, 0);
-    ROM_PWMPulseWidthSet(PWM_BASE, PWM_OUT_2, 0);
+    PWMPulseWidthSet(PWM_BASE, PWM_OUT_0, 0);
+    PWMPulseWidthSet(PWM_BASE, PWM_OUT_2, 0);
 
     //
     // Initially disable the the PWM0 and PWM2 output signals.
     //
-    ROM_PWMOutputState(PWM_BASE, PWM_OUT_0_BIT | PWM_OUT_2_BIT, false);
+    PWMOutputState(PWM_BASE, PWM_OUT_0_BIT | PWM_OUT_2_BIT, false);
 
     //
     // Enable the PWM generators.
     //
-    ROM_PWMGenEnable(PWM_BASE, PWM_GEN_0);
-    ROM_PWMGenEnable(PWM_BASE, PWM_GEN_1);
+    PWMGenEnable(PWM_BASE, PWM_GEN_0);
+    PWMGenEnable(PWM_BASE, PWM_GEN_1);
 
     //
     // Set the pins connected to the motor driver fault signal to input with
     // pull ups.
     //
-    ROM_GPIOPinTypeGPIOInput(GPIO_PORTD_BASE, GPIO_PIN_3);
-    ROM_GPIOPadConfigSet(GPIO_PORTD_BASE, GPIO_PIN_3, GPIO_STRENGTH_2MA,
+    GPIOPinTypeGPIOInput(GPIO_PORTD_BASE, GPIO_PIN_3);
+    GPIOPadConfigSet(GPIO_PORTD_BASE, GPIO_PIN_3, GPIO_STRENGTH_2MA,
                          GPIO_PIN_TYPE_STD_WPU);
 
     //
     // Enable slow decay mode.
     //
-    ROM_GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE, GPIO_PIN_2);
-    ROM_GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, GPIO_PIN_2);
+    GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE, GPIO_PIN_2);
+    GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_2, GPIO_PIN_2);
 
     //
     // Initially configure the direction control and enable pins as GPIO and
     // set low.
     //
-    ROM_GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-    ROM_GPIOPinTypeGPIOOutput(GPIO_PORTH_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-    ROM_GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_0 | GPIO_PIN_1, 0);
-    ROM_GPIOPinWrite(GPIO_PORTH_BASE, GPIO_PIN_0 | GPIO_PIN_1, 0);
+    GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+    GPIOPinTypeGPIOOutput(GPIO_PORTH_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+    GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_0 | GPIO_PIN_1, 0);
+    GPIOPinWrite(GPIO_PORTH_BASE, GPIO_PIN_0 | GPIO_PIN_1, 0);
 
     //
     // Enable the 12V boost
     //
-    ROM_GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE, GPIO_PIN_5);
-    ROM_GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_5, GPIO_PIN_5);
+    GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE, GPIO_PIN_5);
+    GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_5, GPIO_PIN_5);
 }
 
 //*****************************************************************************
@@ -173,11 +173,11 @@ MotorDir (tSide ucMotor, tDirection eDirection)
         //
         if(eDirection == FORWARD)
         {
-            ROM_GPIOPinWrite(GPIO_PORTH_BASE, GPIO_PIN_1 , 0);
+            GPIOPinWrite(GPIO_PORTH_BASE, GPIO_PIN_1 , 0);
         }
         else
         {
-            ROM_GPIOPinWrite(GPIO_PORTH_BASE, GPIO_PIN_1 , GPIO_PIN_1);
+            GPIOPinWrite(GPIO_PORTH_BASE, GPIO_PIN_1 , GPIO_PIN_1);
         }
     }
     else
@@ -187,11 +187,11 @@ MotorDir (tSide ucMotor, tDirection eDirection)
         //
         if(eDirection == FORWARD)
         {
-            ROM_GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_1 , GPIO_PIN_1);
+            GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_1 , GPIO_PIN_1);
         }
         else
         {
-            ROM_GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_1 , 0);
+            GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_1 , 0);
         }
     }
 }
@@ -229,7 +229,7 @@ MotorRun (tSide ucMotor)
     // Configure the pin to be controlled by the PWM module.  This enables
     // the PWM signal onto the pin, which causes the motor to start running.
     //
-    ROM_GPIOPinTypePWM(ulPort, GPIO_PIN_0);
+    GPIOPinTypePWM(ulPort, GPIO_PIN_0);
 }
 
 //*****************************************************************************
@@ -265,12 +265,12 @@ MotorStop (tSide ucMotor)
     // the PWM generator from controlling this pin.  This causes the motor
     // to stop running.
     //
-    ROM_GPIOPinTypeGPIOOutput(ulPort, GPIO_PIN_0);
+    GPIOPinTypeGPIOOutput(ulPort, GPIO_PIN_0);
 
     //
     // Set the pin low.
     //
-    ROM_GPIOPinWrite(ulPort, GPIO_PIN_0, 0);
+    GPIOPinWrite(ulPort, GPIO_PIN_0, 0);
 }
 
 //*****************************************************************************
@@ -320,18 +320,18 @@ MotorSpeed(tSide ucMotor, unsigned short usPercent)
     // First, enable the PWM output in case it was disabled by the
     // previously requested speed being greater than 95%
     //
-    ROM_PWMOutputState(PWM_BASE, ulPWMOutBit, true);
+    PWMOutputState(PWM_BASE, ulPWMOutBit, true);
 
     //
     // Make sure that output is not inverted.
     //
-    ROM_PWMOutputInvert(PWM_BASE, ulPWMOutBit, false);
+    PWMOutputInvert(PWM_BASE, ulPWMOutBit, false);
 
     //
     // Set the pulse width to the requested value. Divide by two since
     // we are using 6V motors with 12V power rail.
     //
-    ROM_PWMPulseWidthSet(PWM_BASE, ulPWMOut, ((PWM_PERIOD * usPercent) /
+    PWMPulseWidthSet(PWM_BASE, ulPWMOut, ((PWM_PERIOD * usPercent) /
                          (100 << 8)));
 }
 
