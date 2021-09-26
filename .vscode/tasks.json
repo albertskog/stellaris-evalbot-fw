@@ -25,6 +25,15 @@
                 "$gcc"
             ],
             "dependsOn": ["make"]
+        },
+        {
+            "label": "clean",
+            "type": "process",
+            "command": "make",
+            "args": ["clean"],
+            "problemMatcher": [
+                "$gcc"
+            ]
         }
     ]
 }
