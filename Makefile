@@ -54,6 +54,17 @@ IPATH+=${ROOT}/driverlib
 
 # Source paths
 VPATH=src
+VPATH+=src/evalbot_drivers
+VPATH+=src/lib
+
+# Generate debug symbols
+CFLAGS+=-g
+
+# Enable debug features
+CFLAGS+=-DDEBUG -std=c11
+
+# Defines
+CFLAGS+=-DPART_LM3S9B92
 
 # Default rule
 all: ${COMPILER}
@@ -68,8 +79,13 @@ ${COMPILER}:
 	@mkdir -p ${COMPILER}
 
 # Rules for building the project
-${COMPILER}/project.axf: ${COMPILER}/main.o
 ${COMPILER}/project.axf: ${COMPILER}/startup_${COMPILER}.o
+${COMPILER}/project.axf: ${COMPILER}/main.o
+${COMPILER}/project.axf: ${COMPILER}/io.o
+${COMPILER}/project.axf: ${COMPILER}/motor.o
+${COMPILER}/project.axf: ${COMPILER}/display96x16x1.o
+${COMPILER}/project.axf: ${COMPILER}/sensors.o
+${COMPILER}/project.axf: ${COMPILER}/millis.o
 ${COMPILER}/project.axf: ${ROOT}/driverlib/${COMPILER}-cm3/libdriver-cm3.a
 ${COMPILER}/project.axf: project.ld
 SCATTERgcc_project=project.ld

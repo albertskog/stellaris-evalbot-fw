@@ -17,7 +17,7 @@
             }
         },
         {
-            "label": "flash",
+            "label": "upload",
             "type": "process",
             "command": "openocd",
             "args": ["-f", "evalbot_flash.cfg"],
