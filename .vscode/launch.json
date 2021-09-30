@@ -1,0 +1,24 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "Debug",
+            "servertype": "openocd",
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "make",
+            "runToMain": true,
+            "executable": "${workspaceFolder}/gcc/project.axf",
+            "device": "LM3S9B92",
+            "configFiles": ["evalbot.cfg"],
+            "preRestartCommands": [
+                "monitor reset halt",
+                "break main"
+            ]
+        }
+    ]
+}
