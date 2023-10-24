@@ -9,6 +9,8 @@ Get StellarisWare: https://www.ti.com/tool/SW-DRL#downloads (yes, finally a link
 
 Extract to `../stellarisware` (or update the makefile with your installation path)
 
+EDIT 2023: That link seems to be dead as well, added a copy of `stellarisware` to the repo!
+
 ### Compiler gcc-arm-none-eabi
 Get gcc-arm-none-eabi: https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
 
